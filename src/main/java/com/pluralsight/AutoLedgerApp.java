@@ -103,6 +103,53 @@ public class AutoLedgerApp {
 
     private static void customReportSearch() {
         //todo- A new screen that allows the user to run pre-defined reports or to run a custom search
+        String customReportPrompt = """
+                === Custom Report ===
+                (1) Month to Date
+                (2) Previous Month
+                (3) Year to Date
+                (4) Previous Year
+                (5) Search By Vendor
+                (H) Back to Home Page
+                """;
+        System.out.println(customReportPrompt);
+        String userInput  = myScanner.nextLine();
+        //todo Add a .ignorecase somehow into the usersInput
+        switch (userInput){
+            case "1":
+                displayThisMonthsTrans();
+                break;
+            case "2":
+                displayLastMonthTrans();
+                break;
+            case "3":
+                displayCurrentYearTrans();
+                break;
+            case "4":
+                displayLastYearTrans();
+                break;
+            case "5":
+                searchByVendor();
+                break;
+            case "0":
+                break;
+
+        }
+    }
+
+    private static void displayThisMonthsTrans() {
+    }
+
+    private static void displayLastMonthTrans() {
+    }
+
+    private static void displayCurrentYearTrans() {
+    }
+
+    private static void displayLastYearTrans() {
+    }
+
+    private static void searchByVendor() {
     }
 
 
