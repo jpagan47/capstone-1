@@ -137,9 +137,14 @@ public class AutoLedgerApp {
 
         System.out.println("Please Enter the Vendor Name:");
         String vendor = myScanner.nextLine();
-
-        System.out.println("Please Enter the Amount of the Deposit:");
-        double amount = Double.parseDouble(myScanner.nextLine());
+        double amount = 0;
+        do {
+            System.out.println("Please Enter the Amount of the Payment:");
+            amount = Double.parseDouble(myScanner.nextLine());
+            if (amount <= 0) {
+                System.err.println("The payment must be a positive value! Try again");
+            }
+        } while (amount <= 0);
 
         try {
             fileWriter = new FileWriter(filePath, true);
@@ -177,7 +182,7 @@ public class AutoLedgerApp {
         do {
             System.out.println("Please Enter the Amount of the Payment:");
             amount = Double.parseDouble(myScanner.nextLine());
-            if (amount <= 0) {
+            if (amount >= 0) {
                 System.err.println("The payment must be a negative value! Try again");
             }
         } while (amount >= 0);
