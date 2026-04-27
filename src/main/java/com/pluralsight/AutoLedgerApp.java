@@ -301,20 +301,45 @@ public class AutoLedgerApp {
         LocalDate today = LocalDate.now();
         printOutHeader();
         boolean found = false;
-        for(Transaction t : transactionsList){
-            LocalDate transDate = LocalDate.parse(t.getDate(),DateTimeFormatter.ofPattern("MM-dd-yyyy"));
-            if (transDate.getMonth() ==  today.getMonth()&& transDate.getYear() == today.getYear()){
-                System.out.printf("%-10s %-10s %-28s %-22s %.2f %n", t.getDate(), t.getTime(), t.getDescription(),t.getVendor(), t.getAmount());
+        for (Transaction t : transactionsList) {
+            LocalDate transDate = LocalDate.parse(t.getDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
+            if (transDate.getMonth() == today.getMonth() && transDate.getYear() == today.getYear()) {
+                System.out.printf("%-10s %-10s %-28s %-22s %.2f %n", t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
 
             }
             found = true;
         }
-        if(found == false){
-             System.out.println("There is no Transactions this month");
+        if (found == false) {
+            System.out.println("There is no Transactions this month");
         }
     }
 
     private static void displayLastMonthTrans() {
+        LocalDate today = LocalDate.now();
+        LocalDate lastMonthDate = today.minusMonths(1);
+        printOutHeader();
+        boolean found = false;
+
+        for (Transaction t : transactionsList) {
+            LocalDate transDate = LocalDate.parse(t.getDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
+
+            if (transDate.getMonth() == lastMonthDate.getMonth() && transDate.getYear() == lastMonthDate.getYear()) {
+                System.out.printf("%-10s %-10s %-28s %-22s %.2f %n",
+                        t.getDate(),
+                        t.getTime(),
+                        t.getDescription(),
+                        t.getVendor(),
+                        t.getAmount());
+
+                found = true; // ✅ mark that we found something
+                System.out.println("\n");
+                System.out.println("====== End of Transactions ======");
+                System.out.println("\n");
+            }
+        }
+        if (!found) {
+            System.out.println("There is no Transactions this month");
+        }
     }
 
     private static void displayCurrentYearTrans() {
