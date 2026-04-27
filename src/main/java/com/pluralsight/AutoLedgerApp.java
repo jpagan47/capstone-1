@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class AutoLedgerApp {
@@ -15,9 +15,9 @@ public class AutoLedgerApp {
     //Declaring my Scanner
     public static Scanner myScanner = new Scanner(System.in);
     //Declaring my ArrayList
-    public static ArrayList<Transaction> transactionsList = new ArrayList<Transaction>();
+    public static ArrayList<Transaction> transactionsList = new ArrayList<>();
     //Declaring my ArrayList
-    public static HashMap<String, Transaction> transMap = new HashMap<String, Transaction>();
+//    public static HashMap<String, Transaction> transMap = new HashMap<String, Transaction>();
     //Declaring my File and Buffer readers
     public static FileReader fileReader;
     public static BufferedReader bufferedReader;
@@ -26,6 +26,8 @@ public class AutoLedgerApp {
     public static BufferedWriter bufferedWriter;
     //Declaring my Date Time Formatter
     public static DateTimeFormatter dateTimeFormatter;
+    public static LocalDate localDate ;
+    public static LocalTime localTime ;
     //Declaring my Prompts
     public static String mainMenuPrompt = """
             🏁............🏎💨..
@@ -39,7 +41,7 @@ public class AutoLedgerApp {
     public static String ledgerMenuPrompt = """
             === Ledger Menu ===
             (A) View All
-            (D) View  Only Deposits
+            (D) View Only Deposits
             (P) View Only Payments
             (R) Custom Report Search
             (H) Back To Home Page
@@ -121,15 +123,15 @@ public class AutoLedgerApp {
 
     private static void addDeposit() {
         //Date Formatting
-        System.out.println("Please Enter the Date of the Deposit (MM/dd/yyyy) :");
+        System.out.println("Please Enter the Date of the Deposit (MM-dd-yyyy) :");
         String date = myScanner.nextLine();
-        dateTimeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        LocalDate dateFormatter = LocalDate.parse(date, dateTimeFormatter);
+        dateTimeFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        localDate = LocalDate.parse(date, dateTimeFormatter);
         //Time Formatting
         System.out.println("Please Enter the Time of the Deposit (HH:mm:ss) :");
         String time = myScanner.nextLine();
         dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        LocalTime timeFormatter = LocalTime.parse(time, dateTimeFormatter);
+        localTime = LocalTime.parse(time, dateTimeFormatter);
 
         System.out.println("Please Enter a short Description of the Deposit:");
         String description = myScanner.nextLine();
@@ -151,6 +153,7 @@ public class AutoLedgerApp {
             bufferedWriter.newLine();
             bufferedWriter.write(date + "|" + time + "|" + description + "|" + vendor + "|" + amount);
             bufferedWriter.close();
+            loadTransactions(filePath);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -160,15 +163,15 @@ public class AutoLedgerApp {
 
     private static void makePayment() {
         //Date Formatting
-        System.out.println("Please Enter the Date of the Payment (MM/dd/yyyy) :");
+        System.out.println("Please Enter the Date of the Payment (MM-dd-yyyy) :");
         String date = myScanner.nextLine();
-        dateTimeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        LocalDate dateFormatter = LocalDate.parse(date, dateTimeFormatter);
+        dateTimeFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        localDate = LocalDate.parse(date, dateTimeFormatter);
         //Time Formatting
         System.out.println("Please Enter the Time of the Payment (HH:mm:ss) :");
         String time = myScanner.nextLine();
         dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        LocalTime timeFormatter = LocalTime.parse(time, dateTimeFormatter);
+        localTime = LocalTime.parse(time, dateTimeFormatter);
 
         System.out.println("Please Enter a short Description of the Payment:");
         String description = myScanner.nextLine();
@@ -189,6 +192,7 @@ public class AutoLedgerApp {
             bufferedWriter.newLine();
             bufferedWriter.write(date + "|" + time + "|" + description + "|" + vendor + "|" + amount);
             bufferedWriter.close();
+            loadTransactions(filePath);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -222,11 +226,15 @@ public class AutoLedgerApp {
 
     private static void displayAllTransactions() {
         //todo - Display all entries SORTED
-
+//        transactionsList.sort(Comparator.comparing(Transaction::getDate));
+        printOutHeader();
+//        transactionsList.sort(Comparator.comparing(transaction -> LocalDate.parse(transaction.getDate(),DateTimeFormatter.ofPattern("MM/dd/yyyy"))).thenComparing(t -> LocalTime.parse(t.getTime(),DateTimeFormatter.ofPattern("HH:mm:ss"))));
+        for (Transaction t: transactionsList) {
+            System.out.printf("%-10s %-10s %-28s %-22s %.2f %n", t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+        }
     }
 
     private static void displayAllDeposits() {
-        //todo - Display only the entries that are deposits into the account
         //For only Deposits
         printOutHeader();
         for (Transaction t : transactionsList) {
@@ -236,7 +244,6 @@ public class AutoLedgerApp {
             }
         }
     }
-
     private static void displayAllPayments() {
         //For only Payments
         printOutHeader();
@@ -270,6 +277,7 @@ public class AutoLedgerApp {
                 break;
             case "0":
                 break;
+
             default:
                 System.err.println("You did not enter a valid input");
         }
