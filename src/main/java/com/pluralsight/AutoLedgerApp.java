@@ -367,6 +367,7 @@ public class AutoLedgerApp {
     private static void searchByVendor() {
         System.out.println("Please Enter Vendor Name :");
         String useInput = myScanner.nextLine();
+        printOutHeader();
         boolean found = false;
         for (Transaction t : transactionsList) {
             if (t.getVendor().toLowerCase().contains(useInput.toLowerCase())) {
