@@ -11,16 +11,12 @@ import java.util.Scanner;
 public class AutoLedgerApp {
     //Class Level Field Variables
     //Path for the file I am reading (transactions.csv)
-    public static String filePath = "src/main/resources/transactions.csv";
+    public static String FILE_PATH = "src/main/resources/transactions.csv";
     //Declaring my Scanner
     public static Scanner myScanner = new Scanner(System.in);
     //Declaring my ArrayList
     public static ArrayList<Transaction> transactionsList = new ArrayList<>();
-    //Declaring my ArrayList
-//    public static HashMap<String, Transaction> transMap = new HashMap<String, Transaction>();
     //Declaring my File and Buffer readers
-    public static FileReader fileReader;
-    public static BufferedReader bufferedReader;
     //Declaring my File and Buffered writer
     public static FileWriter fileWriter;
     public static BufferedWriter bufferedWriter;
@@ -28,46 +24,18 @@ public class AutoLedgerApp {
     public static DateTimeFormatter dateTimeFormatter;
     public static LocalDate localDate;
     public static LocalTime localTime;
-    //Declaring my Prompts
-    public static String mainMenuPrompt = """
-            🏁............🏎💨..
-            ===== Main Menu =====
-            (D) Add Deposit
-            (P) Make Payment (Debit)
-            (L) Ledger
-            (X) Exit
-            🏎️. ݁₊ ⊹ . ݁˖ .
-            """;
-    public static String ledgerMenuPrompt = """
-            === Ledger Menu ===
-            (A) View All
-            (D) View Only Deposits
-            (P) View Only Payments
-            (R) Custom Report Search
-            (H) Back To Home Page
-            """;
-    public static String customReportPrompt = """
-            === Custom Report ===
-            (1) Month to Date
-            (2) Previous Month
-            (3) Year to Date
-            (4) Previous Year
-            (5) Search By Vendor
-            (0) Back to Ledger
-            """;
 
     //All my code that needs to run
     public static void main(String[] args) {
-        loadTransactions(filePath);
+        loadTransactions(FILE_PATH);
         mainMenu();
         System.out.println("End of Application");
-
     }
 
     public static void loadTransactions(String fileName) {
         try {
-            fileReader = new FileReader(fileName);
-            bufferedReader = new BufferedReader(fileReader);
+            FileReader fileReader = new FileReader(fileName);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
             try {
                 String line = bufferedReader.readLine();
                 line = bufferedReader.readLine();
@@ -90,11 +58,18 @@ public class AutoLedgerApp {
             System.err.println("The file with the path " + fileName + " was not found!");
             throw new RuntimeException(e);
         }
-
-
     }
 
     public static void mainMenu() {
+        String mainMenuPrompt = """
+            🏁............🏎💨..
+            ===== Main Menu =====
+            (D) Add Deposit
+            (P) Make Payment (Debit)
+            (L) Ledger
+            (X) Exit
+            🏎️. ݁₊ ⊹ . ݁˖ .
+            """;
         boolean running = true;
         do {
             System.out.println(mainMenuPrompt);
@@ -147,19 +122,16 @@ public class AutoLedgerApp {
                 System.err.println("The payment must be a positive value! Try again");
             }
         } while (amount <= 0);
-
         try {
-            fileWriter = new FileWriter(filePath, true);
+            fileWriter = new FileWriter(FILE_PATH, true);
             bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.newLine();
             bufferedWriter.write(localDate + "|" + localTime.format(timeFormatter) + "|" + description + "|" + vendor + "|" + amount);
             bufferedWriter.close();
-            loadTransactions(filePath);
+            loadTransactions(FILE_PATH);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
     private static void makePayment() {
@@ -188,22 +160,27 @@ public class AutoLedgerApp {
                 System.err.println("The payment must be a negative value! Try again");
             }
         } while (amount >= 0);
-
         try {
-            fileWriter = new FileWriter(filePath, true);
+            fileWriter = new FileWriter(FILE_PATH, true);
             bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.newLine();
             bufferedWriter.write(localDate + "|" + localTime.format(timeFormatter) + "|" + description + "|" + vendor + "|" + amount);
             bufferedWriter.close();
-            loadTransactions(filePath);
+            loadTransactions(FILE_PATH);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
     private static void ledgerMenu() {
+        String ledgerMenuPrompt = """
+            === Ledger Menu ===
+            (A) View All
+            (D) View Only Deposits
+            (P) View Only Payments
+            (R) Custom Report Search
+            (H) Back To Home Page
+            """;
         boolean running = true;
         do {
             System.out.println(ledgerMenuPrompt);
@@ -232,17 +209,15 @@ public class AutoLedgerApp {
         } while (running);
     }
 
-
     private static void displayAllTransactions() {
-        //todo - Display all entries SORTED
 
         printOutHeader();
-
 
         transactionsList.sort(Comparator.comparing(Transaction::getDate).reversed());
         for (Transaction t : transactionsList) {
             formatedOutput(t);
         }
+        endOfTransactions();
     }
 
     private static void displayAllDeposits() {
@@ -254,6 +229,7 @@ public class AutoLedgerApp {
 
             }
         }
+        endOfTransactions();
     }
 
     private static void displayAllPayments() {
@@ -264,35 +240,47 @@ public class AutoLedgerApp {
                 formatedOutput(t);
             }
         }
+        endOfTransactions();
     }
 
     private static void customReportSearch() {
-        //todo- A new screen that allows the user to run pre-defined reports or to run a custom search
-        System.out.println(customReportPrompt);
-        String userInput = myScanner.nextLine();
-        userInput = userInput.toUpperCase();
-        switch (userInput) {
-            case "1":
-                displayThisMonthsTrans();
-                break;
-            case "2":
-                displayLastMonthTrans();
-                break;
-            case "3":
-                displayCurrentYearTrans();
-                break;
-            case "4":
-                displayLastYearTrans();
-                break;
-            case "5":
-                searchByVendor();
-                break;
-            case "0":
-                break;
-
-            default:
-                System.err.println("You did not enter a valid input");
-        }
+        String customReportPrompt = """
+            === Custom Report ===
+            (1) Month to Date
+            (2) Previous Month
+            (3) Year to Date
+            (4) Previous Year
+            (5) Search By Vendor
+            (0) Back to Ledger
+            """;
+        boolean running = true;
+        do {
+            System.out.println(customReportPrompt);
+            String userInput = myScanner.nextLine();
+            userInput = userInput.toUpperCase();
+            switch (userInput) {
+                case "1":
+                    displayThisMonthsTrans();
+                    break;
+                case "2":
+                    displayLastMonthTrans();
+                    break;
+                case "3":
+                    displayCurrentYearTrans();
+                    break;
+                case "4":
+                    displayLastYearTrans();
+                    break;
+                case "5":
+                    searchByVendor();
+                    break;
+                case "0":
+                    running = false;
+                    break;
+                default:
+                    System.err.println("You did not enter a valid input");
+            }
+        } while (running);
     }
 
     private static void displayThisMonthsTrans() {
@@ -303,13 +291,13 @@ public class AutoLedgerApp {
             LocalDate transDate = t.getDate();
             if (transDate.getMonth() == today.getMonth() && transDate.getYear() == today.getYear()) {
                 formatedOutput(t);
-
             }
             found = true;
         }
-        if (found == false) {
+        if (!found) {
             System.out.println("There is no Transactions this month");
         }
+        endOfTransactions();
     }
 
     private static void displayLastMonthTrans() {
@@ -317,21 +305,17 @@ public class AutoLedgerApp {
         LocalDate lastMonthDate = today.minusMonths(1);
         printOutHeader();
         boolean found = false;
-
         for (Transaction t : transactionsList) {
             LocalDate transDate = t.getDate();
-
             if (transDate.getMonth() == lastMonthDate.getMonth() && transDate.getYear() == lastMonthDate.getYear()) {
                 formatedOutput(t);
                 found = true; // ✅ mark that we found something
             }
         }
-        System.out.println("\n");
-        System.out.println("====== End of Transactions ======");
-        System.out.println("\n");
         if (!found) {
             System.out.println("There is no Transactions this month");
         }
+        endOfTransactions();
     }
 
     private static void displayCurrentYearTrans() {
@@ -350,24 +334,21 @@ public class AutoLedgerApp {
                 found = true; // ✅ mark that we found something
             }
         }
-        System.out.println("\n");
-        System.out.println("====== End of Transactions ======");
-        System.out.println("\n");
+
         if (!found) {
             System.out.println("There is no Transactions this year");
         }
+        endOfTransactions();
     }
 
     private static void displayLastYearTrans() {
         LocalDate today = LocalDate.now();
         int lastYear = today.getYear() - 1;
-
         LocalDate january = today.withMonth(1).withDayOfMonth(1);
         printOutHeader();
         boolean found = false;
         for (Transaction t : transactionsList) {
             LocalDate transactionDate = t.getDate();
-
             if (transactionDate.getYear() == lastYear) {
                 LocalDate transDate = t.getDate();
                 LocalTime transTime = t.getTime();
@@ -376,17 +357,32 @@ public class AutoLedgerApp {
 
             }
         }
-        System.out.println("\n");
-        System.out.println("====== End of Transactions ======");
-        System.out.println("\n");
         if (!found) {
             System.out.println("There is no Transactions this year");
         }
+        endOfTransactions();
+    }
+
+    private static void endOfTransactions() {
+        System.out.println("\n");
+        System.out.println("====== End of Transactions ======");
+        System.out.println("\n");
     }
 
     private static void searchByVendor() {
-
-
+        System.out.println("Please Enter Vendor Name :");
+        String useInput = myScanner.nextLine();
+        boolean found = false;
+        for (Transaction t : transactionsList) {
+            if (t.getVendor().toLowerCase().contains(useInput.toLowerCase())) {
+                formatedOutput(t);
+                found = true;
+            }
+        }
+        if (!found) {
+            System.err.println("That Vendor is not on the Ledger");
+        }
+        endOfTransactions();
     }
 
     private static void printOutHeader() {
