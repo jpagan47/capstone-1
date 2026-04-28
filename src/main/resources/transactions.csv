@@ -1,33 +1,30 @@
-date|time|description|vendor|amount
-2025-01-05|09:15:00|Opening balance deposit|Bank|1000.00
-2025-01-12|13:42:10|Office supplies|Staples|-48.22
-2025-02-03|08:05:33|Consulting invoice paid|Acme Client|1250.00
-2025-02-10|18:20:00|Internet bill|Comcast|-89.99
-2025-03-01|12:00:00|Coffee with client|Starbucks|-14.75
-2025-03-15|16:45:21|Software subscription|Adobe|-29.99
-2025-04-22|10:30:00|Website project deposit|Blue Ocean LLC|800.00
-2025-05-02|11:11:11|Printer paper|Staples|-19.47
-2025-06-14|15:05:09|Travel reimbursement|Acme Client|215.00
-2025-07-19|19:22:45|Team lunch|Chipotle|-63.80
-2025-08-08|07:59:59|Equipment sale|Facebook Marketplace|150.00
-2025-09-30|17:10:00|Electric bill|City Utilities|-122.18
-2025-10-21|14:25:33|Quarterly bonus|Bank|500.00
-2025-11-11|09:09:09|Domain renewal|GoDaddy|-21.17
-2025-12-31|23:50:00|Year-end adjustment|Bank|300.00
-2026-01-03|10:10:10|January rent|Landlord|-950.00
-2026-01-15|09:30:00|Invoice 2001 paid|Acme Client|1750.00
-2026-02-07|08:00:00|Laptop repair|Geek Squad|-140.00
-2026-02-28|17:45:00|Book sale income|Amazon|84.32
-2026-03-02|12:12:12|March rent|Landlord|-950.00
-2026-03-10|16:20:00|Consulting payment|Northwind|2200.00
-2026-03-18|07:40:55|Office chair|Amazon|-189.99
-2026-03-29|18:05:05|Cloud hosting|DigitalOcean|-56.14
-2026-04-01|09:00:00|April rent|Landlord|-950.00
-2026-04-05|13:15:30|Invoice 2002 paid|Northwind|1450.00
-2026-04-09|08:48:00|Coffee beans for office|Costco|-37.45
-2026-04-12|17:30:45|Tax refund|IRS|420.17
-2026-04-18|11:22:33|Client lunch|Panera|-28.60
-2026-04-22|15:55:10|Monitor stand|Amazon|-44.95
-2026-04-24|10:05:00|Emergency consulting payment|Acme Client|675.00
-2026-04-28|13:24:00|descriptionTest|VendorTest|100.25
-2026-04-28|11:31:21|testDescription|TestVendor|-10.0
+2025-01-12|08:15:23|Fuel Fill-Up|Shell Gas|-60.45
+2025-02-03|12:45:10|Oil Change|Jiffy Lube|-85.00
+2025-03-18|09:10:45|Paycheck Deposit|Employer|2200.00
+2025-04-22|14:22:30|Brake Replacement|Midas|-300.75
+2025-05-10|18:05:12|Parking Fee|City Parking|-20.00
+2025-06-14|11:30:00|Tire Rotation|Firestone|-40.00
+2025-07-19|16:40:55|Fuel Fill-Up|Exxon|-70.10
+2025-08-08|10:15:44|Insurance Payment|Geico|-175.00
+2025-09-01|13:50:20|Car Accessories|AutoZone|-115.25
+2025-10-11|07:55:33|Fuel Fill-Up|BP Gas|-68.00
+2025-11-20|19:22:11|Toll Payment|EZPass|-30.00
+2025-12-05|09:00:00|Side Job Income|Client Payment|550.00
+2026-01-09|15:18:27|Brake Pads Replacement|Midas|-320.40
+2026-01-25|12:00:45|Fuel Fill-Up|Shell Gas|-66.10
+2026-02-14|17:35:59|Car Detail|Detail Shop|-140.00
+2026-02-28|08:20:14|Fuel Fill-Up|Wawa Gas|-72.55
+2026-03-03|14:10:10|Registration Renewal|DMV|-110.00
+2026-03-10|11:45:33|Fuel Fill-Up|Exxon|-67.89
+2026-03-15|18:25:00|Uber Driving Income|Uber|320.00
+2026-03-20|09:30:21|Battery Replacement|AutoZone|-210.00
+2026-03-25|13:15:00|Shop Supplies|Home Depot|-180.75
+2026-03-28|16:45:10|Client Payment|Custom Work|900.00
+2026-04-01|08:15:23|Fuel Fill-Up|Shell Gas|-65.32
+2026-04-05|12:45:10|Car Wash|QuickWash|-15.00
+2026-04-08|09:10:45|Paycheck Deposit|Employer|2500.00
+2026-04-12|14:22:30|Oil Change|Jiffy Lube|-89.99
+2026-04-15|18:05:12|Parking Fee|City Parking|-12.00
+2026-04-18|11:30:00|Tire Rotation|Firestone|-45.00
+2026-04-22|16:40:55|Fuel Fill-Up|Exxon|-70.21
+2026-04-26|19:45:56|Electric Bill|PSEG|-345.76

@@ -236,12 +236,10 @@ public class AutoLedgerApp {
 
     private static void displayAllTransactions() {
         //todo - Display all entries SORTED
-        //transactionsList.sort(Comparator.comparing(Transaction::getDate));
-        // Sort by date, then time
-
 
         printOutHeader();
-//        transactionsList.sort(Comparator.comparing(transaction -> LocalDate.parse(transaction.getDate(),DateTimeFormatter.ofPattern("MM/dd/yyyy"))).thenComparing(t -> LocalTime.parse(t.getTime(),DateTimeFormatter.ofPattern("HH:mm:ss"))));
+        transactionsList.sort(Comparator.comparing(Transaction::getDate));
+        transactionsList.sort(Comparator.comparing(Transaction::getTime));
         for (Transaction t : transactionsList) {
             System.out.printf("%-10s %-10s %-28s %-22s %.2f %n", t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
         }
