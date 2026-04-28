@@ -203,7 +203,6 @@ public class AutoLedgerApp {
 
     }
 
-
     private static void ledgerMenu() {
         boolean running = true;
         do {
@@ -238,10 +237,11 @@ public class AutoLedgerApp {
         //todo - Display all entries SORTED
 
         printOutHeader();
-        transactionsList.sort(Comparator.comparing(Transaction::getDate));
-        transactionsList.sort(Comparator.comparing(Transaction::getTime));
+
+
+        transactionsList.sort(Comparator.comparing(Transaction::getDate).reversed());
         for (Transaction t : transactionsList) {
-            System.out.printf("%-10s %-10s %-28s %-22s %.2f %n", t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+            formatedOutput(t);
         }
     }
 
@@ -250,7 +250,7 @@ public class AutoLedgerApp {
         printOutHeader();
         for (Transaction t : transactionsList) {
             if (t.getAmount() > 0) {
-                System.out.printf("%-10s %-10s %-28s %-22s $%.2f %n", t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+                formatedOutput(t);
 
             }
         }
@@ -261,7 +261,7 @@ public class AutoLedgerApp {
         printOutHeader();
         for (Transaction t : transactionsList) {
             if (t.getAmount() < 0) {
-                System.out.printf("%-10s %-10s %-28s %-22s $%.2f %n", t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+                formatedOutput(t);
             }
         }
     }
@@ -302,7 +302,7 @@ public class AutoLedgerApp {
         for (Transaction t : transactionsList) {
             LocalDate transDate = t.getDate();
             if (transDate.getMonth() == today.getMonth() && transDate.getYear() == today.getYear()) {
-                System.out.printf("%-10s %-10s %-28s %-22s %.2f %n", t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+                formatedOutput(t);
 
             }
             found = true;
@@ -322,13 +322,7 @@ public class AutoLedgerApp {
             LocalDate transDate = t.getDate();
 
             if (transDate.getMonth() == lastMonthDate.getMonth() && transDate.getYear() == lastMonthDate.getYear()) {
-                System.out.printf("%-10s %-10s %-28s %-22s %.2f %n",
-                        t.getDate(),
-                        t.getTime(),
-                        t.getDescription(),
-                        t.getVendor(),
-                        t.getAmount());
-
+                formatedOutput(t);
                 found = true; // ✅ mark that we found something
             }
         }
@@ -351,12 +345,7 @@ public class AutoLedgerApp {
              * then checking at the same time if the trans date is on today or before. All nested in an if statement.
              * If params are meet anything in between Jan 1st and today will print*/
             if ((transDate.isEqual(january) || transDate.isAfter(january)) && (transDate.isBefore(today)) || transDate.isEqual(today)) {
-                System.out.printf("%-10s %-10s %-28s %-22s %.2f %n",
-                        t.getDate(),
-                        t.getTime(),
-                        t.getDescription(),
-                        t.getVendor(),
-                        t.getAmount());
+                formatedOutput(t);
 
                 found = true; // ✅ mark that we found something
             }
@@ -382,12 +371,7 @@ public class AutoLedgerApp {
             if (transactionDate.getYear() == lastYear) {
                 LocalDate transDate = t.getDate();
                 LocalTime transTime = t.getTime();
-                System.out.printf("%-10s %-10s %-28s %-22s %.2f %n",
-                        t.getDate(),
-                        t.getTime(),
-                        t.getDescription(),
-                        t.getVendor(),
-                        t.getAmount());
+                formatedOutput(t);
                 found = true; // ✅ mark that we found something
 
             }
@@ -401,6 +385,8 @@ public class AutoLedgerApp {
     }
 
     private static void searchByVendor() {
+
+
     }
 
     private static void printOutHeader() {
@@ -408,5 +394,9 @@ public class AutoLedgerApp {
         System.out.println("=================================================================================");
     }
 
-
+    private static void formatedOutput(Transaction t) {
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String localTimeWithSec = t.getTime().format(timeFormatter);
+        System.out.printf("%-10s %-10s %-28s %-22s %.2f %n", t.getDate(), localTimeWithSec, t.getDescription(), t.getVendor(), t.getAmount());
+    }
 }

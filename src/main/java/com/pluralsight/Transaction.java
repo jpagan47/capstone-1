@@ -7,16 +7,16 @@ public class Transaction {
     public Transaction(LocalDate date, LocalTime time, String description, String vendor, double amount) {
         this.date = date;
         this.time = time;
-        this.description = description;
-        this.vendor = vendor;
-        this.amount = amount;
+        this.setDescription(description);
+        this.setVendor(vendor);
+        this.setAmount(amount);
     }
 
     private LocalDate date;
     private LocalTime time;
-    public String description;
-    public String vendor;
-    public double amount;
+    private String description;
+    private String vendor;
+    private double amount;
     public LocalDate getDate() {
         return date;
     }
