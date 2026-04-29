@@ -1,5 +1,4 @@
 package com.pluralsight;
-
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,10 +18,9 @@ public class AutoLedgerApp {
     public static FileWriter fileWriter;
     public static BufferedWriter bufferedWriter;
     //Declaring my Date Time Formatter
-    public static DateTimeFormatter dateTimeFormatter;
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM-dd-yyyy");
     public static LocalDate localDate;
     public static LocalTime localTime;
-
     //All my code that needs to run
     public static void main(String[] args) {
         loadTransactions(FILE_PATH);
@@ -35,7 +33,7 @@ public class AutoLedgerApp {
 
         System.out.println(exitPrompt);
     }
-
+    //Made a method that takes the file path and splits it and adds it by index to my constructor
     public static void loadTransactions(String fileName) {
         try {
             FileReader fileReader = new FileReader(fileName);
@@ -63,7 +61,7 @@ public class AutoLedgerApp {
             throw new RuntimeException(e);
         }
     }
-
+    //Printing out my Main Menu prompt encasing my switch in a do-while loop and setting my default
     public static void mainMenu() {
         String mainMenuPrompt = """
     \n
@@ -102,14 +100,13 @@ public class AutoLedgerApp {
             }
         } while (running);
     }
-
+    //My method takes the users input and writes it to the csv file , had to use Formatter to get my output to the console correct
     private static void addDeposit() {
         //Date Formatting
         System.out.println("Please Enter the Date of the Deposit (MM-dd-yyyy) :");
         String userInput = myScanner.nextLine();
 
-        dateTimeFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-        localDate = LocalDate.parse(userInput, dateTimeFormatter);
+        localDate = LocalDate.parse(userInput, DATE_FORMATTER);
         //Time Formatting
         System.out.println("Please Enter the Time of the Deposit (HH:mm:ss) :");
         userInput = myScanner.nextLine();
@@ -140,14 +137,13 @@ public class AutoLedgerApp {
             throw new RuntimeException(e);
         }
     }
-
+    //
     private static void makePayment() {
         //Date Formatting
         System.out.println("Please Enter the Date of the Payment (MM-dd-yyyy) :");
         String userInput = myScanner.nextLine();
 
-        dateTimeFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-        localDate = LocalDate.parse(userInput, dateTimeFormatter);
+        localDate = LocalDate.parse(userInput, DATE_FORMATTER);
         //Time Formatting
         System.out.println("Please Enter the Time of the Payment (HH:mm:ss) :");
         userInput = myScanner.nextLine();
@@ -221,36 +217,36 @@ public class AutoLedgerApp {
 
     private static void displayAllTransactions() {
 
-        printOutHeader();
+        displayHeader();
         transactionsList.sort(Comparator.comparing(Transaction::getTime).reversed());
         transactionsList.sort(Comparator.comparing(Transaction::getDate).reversed());
         for (Transaction t : transactionsList) {
-            formatedOutput(t);
+            displayFormattedOutput(t);
         }
-        endOfTransactions();
+        displayEndOfTransactions();
     }
 
     private static void displayAllDeposits() {
         //For only Deposits
-        printOutHeader();
+        displayHeader();
         for (Transaction t : transactionsList) {
             if (t.getAmount() > 0) {
-                formatedOutput(t);
+                displayFormattedOutput(t);
 
             }
         }
-        endOfTransactions();
+        displayEndOfTransactions();
     }
 
     private static void displayAllPayments() {
         //For only Payments
-        printOutHeader();
+        displayHeader();
         for (Transaction t : transactionsList) {
             if (t.getAmount() < 0) {
-                formatedOutput(t);
+                displayFormattedOutput(t);
             }
         }
-        endOfTransactions();
+        displayEndOfTransactions();
     }
 
     private static void customReportSearch() {
@@ -270,19 +266,19 @@ public class AutoLedgerApp {
             userInput = userInput.toUpperCase();
             switch (userInput) {
                 case "1":
-                    displayThisMonthsTrans();
+                    displayThisMonthsTransactions();
                     break;
                 case "2":
-                    displayLastMonthTrans();
+                    displayLastMonthTransactions();
                     break;
                 case "3":
-                    displayCurrentYearTrans();
+                    displayCurrentYearTransactions();
                     break;
                 case "4":
-                    displayLastYearTrans();
+                    displayLastYearTransactions();
                     break;
                 case "5":
-                    searchByVendor();
+                    searchingByVendor();
                     break;
                 case "0":
                     running = false;
@@ -293,45 +289,59 @@ public class AutoLedgerApp {
         } while (running);
     }
 
-    private static void displayThisMonthsTrans() {
+    private static void displayThisMonthsTransactions() {
         LocalDate today = LocalDate.now();
-        printOutHeader();
+        displayHeader();
         boolean found = false;
         for (Transaction t : transactionsList) {
             LocalDate transDate = t.getDate();
             if (transDate.getMonth() == today.getMonth() && transDate.getYear() == today.getYear()) {
-                formatedOutput(t);
+                displayFormattedOutput(t);
             }
             found = true;
         }
         if (!found) {
             System.out.println("There is no Transactions this month");
         }
-        endOfTransactions();
+        displayEndOfTransactions();
     }
 
-    private static void displayLastMonthTrans() {
+
+    private static void displayLastMonthTransactions() {
         LocalDate today = LocalDate.now();
         LocalDate lastMonthDate = today.minusMonths(1);
-        printOutHeader();
+        displayHeader();
         boolean found = false;
         for (Transaction t : transactionsList) {
             LocalDate transDate = t.getDate();
             if (transDate.getMonth() == lastMonthDate.getMonth() && transDate.getYear() == lastMonthDate.getYear()) {
-                formatedOutput(t);
-                found = true; // ✅ mark that we found something
+                displayFormattedOutput(t);
+                found = true; // ✅ mark  that we found something
             }
         }
         if (!found) {
             System.out.println("There is no Transactions this month");
         }
-        endOfTransactions();
+        displayEndOfTransactions();
     }
 
-    private static void displayCurrentYearTrans() {
+//    public static ArrayList<Transaction> customFilters() {
+//
+//        ArrayList<Transaction> results = filterStartDate(transactionsList);
+//        results = filterEndDate(results);
+//        results = filterByDescription(results);
+//
+//        return results;
+//    }
+
+//    private static ArrayList<Transaction> filterStartDate(ArrayList<Transaction> transactions) {
+//        return transactions;
+//    }
+
+    private static void displayCurrentYearTransactions() {
         LocalDate today = LocalDate.now();
         LocalDate january = today.withMonth(1).withDayOfMonth(1);
-        printOutHeader();
+        displayHeader();
         boolean found = false;
         for (Transaction t : transactionsList) {
             LocalDate transDate = t.getDate();
@@ -339,7 +349,7 @@ public class AutoLedgerApp {
              * then checking at the same time if the trans date is on today or before. All nested in an if statement.
              * If params are meet anything in between Jan 1st and today will print*/
             if ((transDate.isEqual(january) || transDate.isAfter(january)) && (transDate.isBefore(today)) || transDate.isEqual(today)) {
-                formatedOutput(t);
+                displayFormattedOutput(t);
 
                 found = true; // ✅ mark that we found something
             }
@@ -348,18 +358,18 @@ public class AutoLedgerApp {
         if (!found) {
             System.out.println("There is no Transactions this year");
         }
-        endOfTransactions();
+        displayEndOfTransactions();
     }
 
-    private static void displayLastYearTrans() {
+    private static void displayLastYearTransactions() {
         LocalDate today = LocalDate.now();
         int lastYear = today.getYear() - 1;
-        printOutHeader();
+        displayHeader();
         boolean found = false;
         for (Transaction t : transactionsList) {
             LocalDate transactionDate = t.getDate();
             if (transactionDate.getYear() == lastYear) {
-                formatedOutput(t);
+                displayFormattedOutput(t);
                 found = true; // ✅ mark that we found something
 
             }
@@ -367,38 +377,41 @@ public class AutoLedgerApp {
         if (!found) {
             System.out.println("There is no Transactions this year");
         }
-        endOfTransactions();
+        displayEndOfTransactions();
     }
 
-    private static void endOfTransactions() {
+    /**
+     * Display footer after show transactions on screen
+     */
+    private static void displayEndOfTransactions() {
         System.out.println("\n");
         System.out.println("====== End of Transactions ======");
         System.out.println("\n");
     }
-
-    private static void searchByVendor() {
+    //Asking user to input the vendor name then looping my list to find out my list .contains(userInput)
+    private static void searchingByVendor() {
         System.out.println("Please Enter Vendor Name :");
         String useInput = myScanner.nextLine();
-        printOutHeader();
+        displayHeader();
         boolean found = false;
         for (Transaction t : transactionsList) {
             if (t.getVendor().toLowerCase().contains(useInput.toLowerCase())) {
-                formatedOutput(t);
+                displayFormattedOutput(t);
                 found = true;
             }
         }
         if (!found) {
             System.err.println("That Vendor is not on the Ledger");
         }
-        endOfTransactions();
+        displayEndOfTransactions();
     }
-
-    private static void printOutHeader() {
+    // Decided to make a header method to call it on all my transaction print-outs
+    private static void displayHeader() {
         System.out.printf("%-10s %-10s %-28s %-22s %s %n", "Date", "Time", " Description", "Vendor", "Amount");
         System.out.println("=================================================================================");
     }
-
-    private static void formatedOutput(Transaction t) {
+    // Formatting my output into proper lines and columns
+    private static void displayFormattedOutput(Transaction t) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         String localTimeWithSec = t.getTime().format(timeFormatter);
         System.out.printf("%-10s %-10s %-28s %-22s %.2f %n", t.getDate(), localTimeWithSec, t.getDescription(), t.getVendor(), t.getAmount());
