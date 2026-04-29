@@ -1,5 +1,7 @@
 # Dealership Ledger System
 
+![Image.png](../../../Downloads/Image.png)
+
 ## About This Project
 
 I built this application as part of my transition into software development, with a focus on creating something practical and easy to use.
